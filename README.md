@@ -1,2 +1,2 @@
 # Navegador Python
- Python Browser
+ Python Browser, usando chromium
