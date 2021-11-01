@@ -39,10 +39,21 @@ class MainWindow(QMainWindow):
         self.urlbar.returnPressed.connect(self.nav_url)
         navbar.addAction(self.urlbar)
 
-        self.add_aba(QUrl('http://www.google.com'))
+        self.add_aba(QUrl('http://www.google.com'), "Nova Guia")
 
         self.show()
         self.setWindowTitle("Python Navegador")
+
+    def add_aba(self, qurl=None, label="Blank"):
+
+        if qurl == None:
+            qurl = QUrl('http://www.google.com')
+        navegador = QWebEngineView()
+        navegador.setUrl(qurl)
+        i = self.tabs.addTab(navegador, label)
+        self.tabs.setCurrentIndex(i)
+        navegador.urlChanged.connect(lambda qurl, navegador = navegador: self.update_url(qurl, navegador))
+        navegador.loadFinished.connect(lambda _, i = i, navegador = navegador: self.tabs.setTabText(i, navegador.page().title()))
 
     
 
