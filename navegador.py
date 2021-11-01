@@ -37,7 +37,7 @@ class MainWindow(QMainWindow):
 
         self.urlbar = QLineEdit()
         self.urlbar.returnPressed.connect(self.nav_url)
-        navbar.addAction(self.urlbar)
+        navbar.addWidget(self.urlbar)
 
         self.add_aba(QUrl('http://www.google.com'), "Nova Guia")
 
@@ -52,8 +52,11 @@ class MainWindow(QMainWindow):
         navegador.setUrl(qurl)
         i = self.tabs.addTab(navegador, label)
         self.tabs.setCurrentIndex(i)
-        navegador.urlChanged.connect(lambda qurl, navegador = navegador: self.update_url(qurl, navegador))
+        #navegador.urlChanged.connect(lambda qurl, navegador = navegador: self.update_url(qurl, navegador))
         navegador.loadFinished.connect(lambda _, i = i, navegador = navegador: self.tabs.setTabText(i, navegador.page().title()))
+    
+    def nav_url():
+        pass
 
     
 
