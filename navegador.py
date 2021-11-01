@@ -6,42 +6,45 @@ import sys
 class MainWindow(QMainWindow):
     def __init__(self):
         super(MainWindow, self).__init__()
-        self.browser = QWebEngineView()
-        self.browser.setUrl(QUrl('https://github.com/DevBrunodeOliveira'))
-        self.setCentralWidget(self.browser)
-        self.showMaximized()
+        self.tabs =QTabWidget()
+        self.tabs.setDocumentMode(True)
+        #self.tabs.tabBarDoubleClicked.connect(self.nova_aba)
+        #self.tabs.currentChanged.connect(self.troca_de_aba)
+        self.tabs.setTabsClosable(True)
+        #self.tabs.tabCloseRequested.connect(self.fechar_aba)
+        self.setCentralWidget(self.tabs)
+        self.status = QStatusBar()
+        self.setStatusBar(self.status)
+        navbar = QToolBar()
+        self.addToolBar(navbar)
 
-        # Barra de Navegação
-        toolbar = QToolBar()
-        self.addToolBar(toolbar)
+        voltar_btn = QAction("<", self)
+        voltar_btn.setToolTip("Voltar")
+        voltar_btn.triggered.connect(lambda: self.tabs.currentWidget().back())
+        navbar.addAction(voltar_btn)
 
-        # Voltar
-        btn_voltar = QAction('<', self)
-        btn_voltar.triggered.connect(self.browser.back)
-        toolbar.addAction(btn_voltar)
+        avancar_btn = QAction(">", self)
+        avancar_btn.setToolTip("Avançar")
+        avancar_btn.triggered.connect(lambda: self.tabs.currentWidget().forward())
+        navbar.addAction(avancar_btn)
 
-        # Avançar
-        btn_avancar = QAction('>', self)
-        btn_avancar.triggered.connect(self.browser.forward)
-        toolbar.addAction(btn_avancar)
+        att_btn = QAction("R",self)
+        att_btn.setToolTip("Atualizar")
+        att_btn.triggered.connect(lambda: self.tabs.currentWidget().reload())
+        navbar.addAction(att_btn)
 
-        # Atualizar
-        btn_att = QAction('att', self)
-        btn_att.triggered.connect(self.browser.reload)
-        toolbar.addAction(btn_att)
+        navbar.addSeparator()
 
-        #Url
-        self.url_bar = QLineEdit()
-        self.url_bar.returnPressed.connect(self.url_reader)
-        toolbar.addWidget(self.url_bar)
-        self.browser.urlChanged.connect(self.url_update)
+        self.urlbar = QLineEdit()
+        self.urlbar.returnPressed.connect(self.nav_url)
+        navbar.addAction(self.urlbar)
 
-    def url_reader(self):
-        url = self.url_bar.text()
-        self.browser.setUrl(QUrl(url))
+        self.add_aba(QUrl('http://www.google.com'))
+
+        self.show()
+        self.setWindowTitle("Python Navegador")
+
     
-    def url_update(self, url):
-        self.url_bar.setText(url.toString())
 
 
 app = QApplication(sys.argv)
