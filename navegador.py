@@ -52,7 +52,7 @@ class MainWindow(QMainWindow):
         navegador.setUrl(qurl)
         i = self.tabs.addTab(navegador, label)
         self.tabs.setCurrentIndex(i)
-        #navegador.urlChanged.connect(lambda qurl, navegador = navegador: self.att_url(qurl, navegador))
+        navegador.urlChanged.connect(lambda qurl, navegador = navegador: self.att_urlbar(qurl, navegador))
         navegador.loadFinished.connect(lambda _, i = i, navegador = navegador: self.tabs.setTabText(i, navegador.page().title()))
     
     def nova_aba(self, i):
