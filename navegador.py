@@ -83,8 +83,8 @@ class MainWindow(QMainWindow):
 
     def nav_url(self):
         url = QUrl(self.urlbar.text())
-        if url.scheme == "":
-            url.scheme('http')
+        if url.scheme() == "":
+            url.setScheme("http")
         self.tabs.currentWidget().setUrl(url)
         pass
 
