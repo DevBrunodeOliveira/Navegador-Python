@@ -8,10 +8,10 @@ class MainWindow(QMainWindow):
         super(MainWindow, self).__init__()
         self.tabs =QTabWidget()
         self.tabs.setDocumentMode(True)
-        #self.tabs.tabBarDoubleClicked.connect(self.nova_aba)
-        #self.tabs.currentChanged.connect(self.troca_de_aba)
+        self.tabs.tabBarDoubleClicked.connect(self.nova_aba)
+        self.tabs.currentChanged.connect(self.troca_de_aba)
         self.tabs.setTabsClosable(True)
-        #self.tabs.tabCloseRequested.connect(self.fechar_aba)
+        self.tabs.tabCloseRequested.connect(self.fechar_aba)
         self.setCentralWidget(self.tabs)
         self.status = QStatusBar()
         self.setStatusBar(self.status)
@@ -52,10 +52,40 @@ class MainWindow(QMainWindow):
         navegador.setUrl(qurl)
         i = self.tabs.addTab(navegador, label)
         self.tabs.setCurrentIndex(i)
-        #navegador.urlChanged.connect(lambda qurl, navegador = navegador: self.update_url(qurl, navegador))
+        #navegador.urlChanged.connect(lambda qurl, navegador = navegador: self.att_url(qurl, navegador))
         navegador.loadFinished.connect(lambda _, i = i, navegador = navegador: self.tabs.setTabText(i, navegador.page().title()))
     
-    def nav_url():
+    def nova_aba(self, i):
+        if i == -1:
+            self.add_aba()
+
+    def troca_de_aba(self, i):
+        qurl = self.tabs.currentWidget().url()
+        self.att_urlbar(qurl, self.tabs.currentWidget())
+        self.att_titulo(self.tabs.currentWidget())
+    
+    def fechar_aba(self, i):
+        if self.tabs.count() < 2:
+            return
+        self.tabs.removeTab(i)
+    
+    def att_titulo(self, navegador):
+        if navegador != self.tabs.currentWidget():
+            return
+        titulo = self.tabs.currentWidget().page().title()
+        self.setWindowTitle(f'{titulo}')
+
+    def att_urlbar(self, url, navegador = None):
+        if navegador != self.tabs.currentWidget():
+            return
+        self.urlbar.setText(url.toString())
+        self.urlbar.setCursorPosition(0)
+
+    def nav_url(self):
+        url = QUrl(self.urlbar.text())
+        if url.scheme == "":
+            url.scheme('http')
+        self.tabs.currentWidget().setUrl(url)
         pass
 
     
